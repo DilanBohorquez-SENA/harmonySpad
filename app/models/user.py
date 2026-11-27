@@ -101,14 +101,16 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
+        default=utc_now_naive,
         server_default=func.current_timestamp(),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
+        default=utc_now_naive,
+        onupdate=utc_now_naive,
         server_default=func.current_timestamp(),
-        onupdate=func.current_timestamp(),
     )
 
     # Restricción para permitir un solo SUPER_ADMIN.
@@ -126,6 +128,22 @@ class User(Base):
     sessions = relationship(
         "UserSession",
         back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
+    client_profile = relationship(
+        "ClientProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
+    employee_profile = relationship(
+        "EmployeeProfile",
+        back_populates="user",
+        uselist=False,
         cascade="all, delete-orphan",
         passive_deletes=True,
     )

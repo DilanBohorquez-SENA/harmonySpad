@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from app.infrastructure.database.base import Base
 
 class UserSession(Base):
@@ -15,3 +16,5 @@ class UserSession(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     ip_address = Column(String(45), nullable=True)
     user_agent = Column(String(255), nullable=True)
+
+    user = relationship("User", back_populates="sessions")
